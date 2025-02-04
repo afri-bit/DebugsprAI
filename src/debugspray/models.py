@@ -1,6 +1,5 @@
-
-
 from pydantic import BaseModel
+
 
 class Issue(BaseModel):
     id: int
@@ -8,6 +7,7 @@ class Issue(BaseModel):
     description: str
     status: str
     src: str
+    test: str
     log: str
 
 
