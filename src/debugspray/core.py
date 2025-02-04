@@ -12,7 +12,7 @@ from debugspray.models import Issue
 logger = logger.setup_logger(__name__)
 
 
-def debug_issue(project_path: str, issue_file_path: str):
+def debug_issue(project_path: str, issue_file_path: str, result_folder: str="results"):
     # Parse the issue file
     issue: Issue | None = None
     try:
@@ -31,7 +31,7 @@ def debug_issue(project_path: str, issue_file_path: str):
     # Get the additional path from the issue file
     project_path = pathlib.Path(project_path).absolute().resolve()
     src_folder = project_path.joinpath(issue.src).resolve()
-    result_folder = pathlib.Path("results").absolute().resolve()
+    result_folder = pathlib.Path(result_folder).absolute().resolve()
     JSON_MAPPING_FILE = "file_mapping.json"
 
     # ========== Google Gemini Configuration ==========
@@ -60,7 +60,7 @@ def debug_issue(project_path: str, issue_file_path: str):
 
     # ========== Start the Processing ==========
     # Ensure response folder exists
-    os.makedirs(result_file, exist_ok=True)
+    os.makedirs(result_folder, exist_ok=True)
 
     # Create a mapping dictionary
     file_mapping = {}
@@ -103,7 +103,7 @@ def debug_issue(project_path: str, issue_file_path: str):
             file_content = file.read()
 
         if not file_content.strip():
-            print(f"Skipping {relative_path} as it is empty.")
+            logger.warning(f"Skipping {relative_path} as it is empty.")
             continue
 
         model = genai.GenerativeModel(model_name="gemini-2.0-flash-exp",
