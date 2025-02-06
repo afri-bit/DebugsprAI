@@ -1,0 +1,64 @@
+name: "The Bug Spray"
+
+description: "Github action to spray bugs away"
+
+inputs:
+  github-repo:
+    description: "GitHub Repository"
+    required: true
+  ref:
+    description: "Git reference (branch, tag, or commit SHA)"
+    default: "main"
+    required: false
+  issue-number:
+    description: "Issue number for reference"
+    required: true
+  repo-token:
+    description: "GitHub Token for authentication"
+    required: true
+    secret: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Checkout source repository of the bug spray"
+      uses: actions/checkout@v4
+      with:
+        repository: "${{ github.repository }}"
+        ref: "${{ github.ref }}"
+        token: "${{ inputs.repo-token }}"
+
+    - name: "Set up Python"
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.8"
+
+    - name: "Authenticate with GitHub Token"
+      shell: bash
+      run: echo "Authenticated with token"
+
+    - name: "Install package from source"
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install .
+
+    - name: "Checkout project repository"
+      uses: actions/checkout@v4
+      with:
+        repository: "${{ inputs.github-repo }}"
+        ref: "${{ inputs.ref }}"
+        token: "${{ inputs.repo-token }}"
+        path: "project-repo"
+
+    # TODO: Parse the issue and generate the json file
+
+    # TODO: Run the bug spray on the project repository based on the issue number
+
+    # TODO: Generate hash for the brach name
+
+    # TODO: Create a new branch and commit the changes
+
+    # TODO: Push the changes to the project repository
+
+    # TODO: Create a pull request
