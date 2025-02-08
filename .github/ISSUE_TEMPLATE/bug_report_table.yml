@@ -1,0 +1,80 @@
+name: "Tabular Bug Report"
+description: "Report a bug to help us improve the project"
+title: "[BUG] - <Short description>"
+labels: ["bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: "## 🐛 Bug Report\nPlease fill out the required fields below."
+
+  - type: input
+    id: bug_summary
+    attributes:
+      label: "🔍 Bug Summary"
+      description: "Provide a short summary of the issue."
+      placeholder: "E.g., The login button doesn't work on Safari"
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "🚨 Severity Level"
+      description: "How critical is this bug?"
+      options:
+        - "🟢 Low (minor issue, doesn't block usage)"
+        - "🟡 Medium (annoying but workaround available)"
+        - "🔴 High (blocks key functionality)"
+        - "🔥 Critical (app crashes or data loss)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: "🔄 Steps to Reproduce"
+      description: "List the steps to reproduce the issue."
+      placeholder: |
+        1. Open the app
+        2. Click on 'Login'
+        3. Enter username/password
+        4. Click submit
+        5. Nothing happens
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: "✅ Expected Behavior"
+      description: "What should happen instead?"
+      placeholder: "E.g., After clicking submit, the user should be logged in."
+
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: "❌ Actual Behavior"
+      description: "What actually happened?"
+      placeholder: "E.g., Clicking submit does nothing."
+
+  - type: input
+    id: environment
+    attributes:
+      label: "🛠️ System Information"
+      description: "Provide system details (e.g., OS, browser, version)."
+      placeholder: "Windows 11, Chrome v110, App v2.0.1"
+
+  - type: textarea
+    id: logs_screenshots
+    attributes:
+      label: "📷 Logs & Screenshots"
+      description: "Attach any logs or screenshots that might help."
+      placeholder: "Drag and drop images or paste logs here."
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: "✅ Confirmation"
+      options:
+        - label: "I have searched for **existing** issues before submitting this."
+          required: true
+        - label: "I have tested with the **latest version** of the application."

@@ -1,0 +1,32 @@
+name: "Auto Bugfix"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  bugfix:
+    
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: "Checkout AI Coder Repository"
+        uses: actions/checkout@v4
+        with:
+          repository: "afri-bit/ai-coder"
+          token: ${{ secrets.GH_TOKEN }} 
+          path: "ai-coder"
+
+      - name: List Files for Debugging
+        run: ls -Ral
+
+      # TODO: Parse the issue and generate the json file
+
+      # TODO: Run the bug spray on the project repository based on the issue number
+
+      # TODO: Generate hash for the brach name
+
+      # TODO: Create a new branch and commit the changes
+
+      # TODO: Push the changes to the project repository
+
+      # TODO: Create a pull request
