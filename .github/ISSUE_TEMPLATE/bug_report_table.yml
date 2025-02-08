@@ -1,4 +1,4 @@
-name: "Tabular Bug Report"
+name: "Bug Report"
 description: "Report a bug to help us improve the project"
 title: "[BUG] - <Short description>"
 labels: ["bug"]
