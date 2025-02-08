@@ -10,6 +10,8 @@ body:
 
   - type: input
     id: summary
+    validations:
+      required: true
     attributes:
       label: "Summary"
       description: "Provide a short summary of the issue."
@@ -34,6 +36,8 @@ body:
       label: "Expected Behavior"
       description: "What should happen instead?"
       placeholder: "E.g., After clicking submit, the user should be logged in."
+    validations:
+      required: true
 
   - type: textarea
     id: actual_behavior
@@ -41,6 +45,8 @@ body:
       label: "Actual Behavior"
       description: "What actually happened?"
       placeholder: "E.g., Clicking submit does nothing."
+    validations:
+      required: true
 
   - type: input
     id: environment
@@ -48,6 +54,8 @@ body:
       label: "System Information"
       description: "Provide system details (e.g., OS, browser, version)."
       placeholder: "Windows 11, Chrome v110, App v2.0.1"
+    validations:
+      required: true
 
   - type: textarea
     id: logs_screenshots
@@ -55,6 +63,8 @@ body:
       label: "Logs"
       description: "Attach any logs or screenshots that might help."
       placeholder: "Drag and drop images or paste logs here."
+    validations:
+      required: false
 
   - type: checkboxes
     id: confirmations
