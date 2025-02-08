@@ -174,3 +174,5 @@ cython_debug/
 
 # Mac OS Things
 .DS_Store
+
+.airesults/
