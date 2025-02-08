@@ -28,7 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install .
 
-      - TODO: Parse the issue and generate the json file
+      # - TODO: Parse the issue and generate the json file
 
       # TODO: Run the bug spray on the project repository based on the issue number
 
