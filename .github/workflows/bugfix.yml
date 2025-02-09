@@ -24,7 +24,7 @@ jobs:
         run: ls -al
       
       - name: Setup the necessary project elements
-        run:|
+        run: |
           mkdir -p .airesults/project
 
       - name: Install Dependencies
@@ -54,7 +54,6 @@ jobs:
       - name: Run Bug Spray
         run: |
           debugsprai debug ./.airesults/issue.md
-
           ls -al .airesults
 
       - name: Copy files from ai results to the project directory
