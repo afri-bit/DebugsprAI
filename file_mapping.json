@@ -1,7 +1,0 @@
-{
-    "helloworld/__init__.py": "/Users/afrizal/workspace/nerdspace/ai-coder-helloworld/src/helloworld/__init__.py",
-    "helloworld/calculator/__init__.py": "/Users/afrizal/workspace/nerdspace/ai-coder-helloworld/src/helloworld/calculator/__init__.py",
-    "helloworld/calculator/calc.py": "/Users/afrizal/workspace/nerdspace/ai-coder-helloworld/src/helloworld/calculator/calc.py",
-    "helloworld/print/__init__.py": "/Users/afrizal/workspace/nerdspace/ai-coder-helloworld/src/helloworld/print/__init__.py",
-    "helloworld/print/something.py": "/Users/afrizal/workspace/nerdspace/ai-coder-helloworld/src/helloworld/print/something.py"
-}

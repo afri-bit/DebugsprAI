@@ -1,5 +1,5 @@
-import json
 import os
+import json
 import pathlib
 from string import Template
 
@@ -12,33 +12,47 @@ from debugsprai.models import Issue
 logger = logger.setup_logger(__name__)
 
 
-def debug_issue(project_path: str, issue_file_path: str, result_folder: str="results"):
-    # Parse the issue file
-    issue: Issue | None = None
-    try:
-        with open(issue_file_path, "r") as file:
-            file_data = json.load(file)  # Load JSON from file
+programming_languages = {
+    "python": "py",
+}
 
-            issue = Issue.model_validate(file_data)
-            logger.info(f"Loaded issue: {issue}")
-    except Exception as e:
-        logger.error(f"Failed to load issue: {e}")
+
+def debug_issue(issue: Issue, result_folder: str = ".airesults"):
+    """
+    The core functionality of debugsprai.
+    This function will read the issue object go through the project files that may
+    be relevant to the issue and will send prompting text to the Gemini API to
+    generate fix suggestions for the bugs reported.
+
+    Args:
+        project_path (str): _description_
+        issue_file_path (str): _description_
+        result_folder (str, optional): _description_. Defaults to "results".
+
+    Raises:
+        ValueError: _description_
+    """
+
+    # Setup the pathing based on the issue object
+    project_path = pathlib.Path(issue.project_folder).absolute().resolve()
 
     # Configuration the project path
     if not os.path.exists(project_path):
         logger.error(f"Project path does not exist: '{project_path}'")
         return
-    # Get the additional path from the issue file
-    project_path = pathlib.Path(project_path).absolute().resolve()
-    src_folder = project_path.joinpath(issue.src).resolve()
+
+        # Get the additional path from the issue file
+    src_folder = project_path.joinpath(issue.source_folder).resolve()
+    test_folder = project_path.joinpath(issue.test_folder).resolve()
     result_folder = pathlib.Path(result_folder).absolute().resolve()
-    JSON_MAPPING_FILE = "file_mapping.json"
+    code_folder = result_folder.joinpath("code").resolve()
+    json_mapping_file = result_folder.joinpath("file_mapping.json").resolve()
 
     # ========== Google Gemini Configuration ==========
     # Configure API Key
     GEMINI_MODEL_NAME = os.environ.get("GEMINI_MODEL_NAME") or "gemini-2.0-flash-exp"
     GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-    if GEMINI_API_KEY is None:
+    if not GEMINI_API_KEY:
         raise ValueError("Please set the 'GEMINI_API_KEY' environment variable")
 
     # Configuration of the generative model
@@ -54,13 +68,14 @@ def debug_issue(project_path: str, issue_file_path: str, result_folder: str="res
     }
 
     model = genai.GenerativeModel(
-        model_name="gemini-2.0-flash-exp",
+        model_name=GEMINI_MODEL_NAME,
         generation_config=generation_config,
     )
 
     # ========== Start the Processing ==========
     # Ensure response folder exists
     os.makedirs(result_folder, exist_ok=True)
+    os.makedirs(code_folder, exist_ok=True)
 
     # Create a mapping dictionary
     file_mapping = {}
@@ -79,10 +94,10 @@ def debug_issue(project_path: str, issue_file_path: str, result_folder: str="res
                 file_mapping[relative_path] = file_path
 
     # Step 2: Save the mapping to a JSON file
-    with open(JSON_MAPPING_FILE, "w") as json_file:
+    with open(json_mapping_file, "w") as json_file:
         json.dump(file_mapping, json_file, indent=4)
 
-    logger.info(f"File mapping saved to {JSON_MAPPING_FILE}")
+    logger.info(f"File mapping saved to {json_mapping_file}")
 
     text_prompt_template = Template(prompt.TEMPLATE_PROMPT)
 
@@ -90,10 +105,10 @@ def debug_issue(project_path: str, issue_file_path: str, result_folder: str="res
     text_prompt = text_prompt_template.substitute(
         issue_id=issue.id,
         issue_title=issue.title,
-        issue_description=issue.description,
-        src_folder=issue.src,
-        test_folder=issue.test,
-        issue_log_report=issue.log,
+        issue_summary=issue.summary,
+        src_folder=issue.source_folder,
+        test_folder=issue.test_folder,
+        issue_log_report=issue.logs,
     )
 
     # Step 3: Upload files to Gemini API and save responses in result folder
@@ -106,8 +121,7 @@ def debug_issue(project_path: str, issue_file_path: str, result_folder: str="res
             logger.warning(f"Skipping {relative_path} as it is empty.")
             continue
 
-        model = genai.GenerativeModel(model_name="gemini-2.0-flash-exp",
-                                      generation_config=generation_config)
+        # model = genai.GenerativeModel(model_name="gemini-2.0-flash-exp", generation_config=generation_config)
 
         response = model.generate_content(
             [
@@ -118,7 +132,7 @@ def debug_issue(project_path: str, issue_file_path: str, result_folder: str="res
 
         # Step 4: Save response in results folder, preserving folder structure
         # Maintain the same structure
-        result_file_path = os.path.join(result_folder, relative_path)
+        result_file_path = os.path.join(code_folder, relative_path)
 
         # Create directories if needed
         os.makedirs(os.path.dirname(result_file_path), exist_ok=True)

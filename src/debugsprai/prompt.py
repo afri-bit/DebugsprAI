@@ -4,7 +4,7 @@ We need to solve the issue based on following information. Analyse the file and 
 If the file is not empty, fix the code based on the following report:
 * id: {issue_id}
 * title: {issue_title}
-* description: {issue_description}
+* summary: {issue_summary}
 * src_folder: {src_folder}
 * test_folder: {test_folder}
 * log_report: {issue_log_report}

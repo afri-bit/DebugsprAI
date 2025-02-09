@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python Executable Debugging",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.venv/bin/debugsprai",
+      "console": "integratedTerminal",
+      "args": [
+        "debug",
+        ".bak/output.json"
+      ],
+      "cwd": "${workspaceFolder}",
+      "stopOnEntry": false,
+      "env": {
+        
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+  ]
+}

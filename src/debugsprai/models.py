@@ -1,9 +1,10 @@
 from pydantic import BaseModel
 from pydantic import Field
+from typing import Union
 
 
 class Issue(BaseModel):
-    id: int = Field(default=None)
+    id: Union[int, None] = Field(default=None)
     title: str = ""
     summary: str = ""
     severity_level: str = ""
