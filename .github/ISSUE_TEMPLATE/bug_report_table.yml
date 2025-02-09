@@ -30,12 +30,52 @@ body:
     validations:
       required: true
 
-  - type: textarea
-    id: expected_behavior
+  - type: dropdown
+    id: language
     attributes:
-      label: "Expected Behavior"
-      description: "What should happen instead?"
-      placeholder: "E.g., After clicking submit, the user should be logged in."
+      label: "Programming Language"
+      description: "Which programming language is the project written in?"
+      options:
+        - "python"
+    validations:
+      required: true
+
+  - type: input
+    id: project_folder
+    attributes:
+      label: "Project Folder"
+      description: "Locate the project folder where the bug is present."
+      placeholder: "path/to/project"
+      value: "."
+    validations:
+      required: true
+
+  - type: input
+    id: source_folder
+    attributes:
+      label: "Source Folder"
+      description: "Locate the source folder where the bug is present (relative to the project folder)."
+      placeholder: "src"
+      value: "src"
+    validations:
+      required: true
+  
+  - type: input
+    id: test_folder
+    attributes:
+      label: "Test Folder"
+      description: "Locate the test folder (relative to the project folder)."
+      placeholder: "tests"
+      value: "tests"
+    validations:
+      required: true
+  
+  - type: input
+    id: environment
+    attributes:
+      label: "System Information"
+      description: "Provide system details (e.g., OS, browser, version)."
+      placeholder: "Windows 11, Chrome v110, App v2.0.1"
     validations:
       required: true
 
@@ -48,12 +88,12 @@ body:
     validations:
       required: true
 
-  - type: input
-    id: environment
+  - type: textarea
+    id: expected_behavior
     attributes:
-      label: "System Information"
-      description: "Provide system details (e.g., OS, browser, version)."
-      placeholder: "Windows 11, Chrome v110, App v2.0.1"
+      label: "Expected Behavior"
+      description: "What should happen instead?"
+      placeholder: "E.g., After clicking submit, the user should be logged in."
     validations:
       required: true
 
