@@ -58,8 +58,8 @@ jobs:
 
       - name: Copy files from ai results to the project directory
         run: |
-          PROJECT_DIR=$(jq -r '.project_dir' ./.airesults/issue.json)
-          cp -r .airesults/project/* $PROJECT_DIR
+          PROJECT_FOLDER=$(jq -r '.project_folder' ./.airesults/issue.json)
+          cp -r .airesults/project/* $PROJECT_FOLDER
 
       - name: Check for Changes
         id: check_diff
