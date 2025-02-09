@@ -45,8 +45,16 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
     src_folder = project_path.joinpath(issue.source_folder).resolve()
     test_folder = project_path.joinpath(issue.test_folder).resolve()
     result_folder = pathlib.Path(result_folder).absolute().resolve()
-    code_folder = result_folder.joinpath("code").resolve()
+    project_result_folder = result_folder.joinpath("project").resolve()
     json_mapping_file = result_folder.joinpath("file_mapping.json").resolve()
+
+    if issue.programming_language.lower() not in programming_languages.keys():
+        raise ValueError(
+            f"Programming language '{issue.programming_language}' not supported."
+        )
+    
+    # Get the file extension
+    file_extension = programming_languages[issue.programming_language.lower()]
 
     # ========== Google Gemini Configuration ==========
     # Configure API Key
@@ -75,25 +83,36 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
     # ========== Start the Processing ==========
     # Ensure response folder exists
     os.makedirs(result_folder, exist_ok=True)
-    os.makedirs(code_folder, exist_ok=True)
+    os.makedirs(project_result_folder, exist_ok=True)
 
     # Create a mapping dictionary
     file_mapping = {}
 
-    # Step 1: Scan the src folder for Python files
+    # Scan the source folder for files
     for root, _, files in os.walk(src_folder):
         for file in files:
-            # TODO: Add support for other file types (dynamic configuration)
-            if file.endswith(".py"):  # Only process Python files
+            if file.endswith(f".{file_extension}"):  # Only process Python files
                 file_path = os.path.join(root, file)
 
                 # Store relative path
-                relative_path = os.path.relpath(file_path, src_folder)
+                relative_path = os.path.relpath(file_path, src_folder.joinpath("..").resolve())
 
                 # Store mapping
                 file_mapping[relative_path] = file_path
 
-    # Step 2: Save the mapping to a JSON file
+    # Scan the test folder for files
+    for root, _, files in os.walk(test_folder):
+        for file in files:
+            if file.endswith(f".{file_extension}"):  # Only process Python files
+                file_path = os.path.join(root, file)
+
+                # Store relative path
+                relative_path = os.path.relpath(file_path, test_folder.joinpath("..").resolve())
+
+                # Store mapping
+                file_mapping[relative_path] = file_path
+    
+    # Save the mapping to a JSON file
     with open(json_mapping_file, "w") as json_file:
         json.dump(file_mapping, json_file, indent=4)
 
@@ -111,7 +130,7 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
         issue_log_report=issue.logs,
     )
 
-    # Step 3: Upload files to Gemini API and save responses in result folder
+    # Upload files to Gemini API and save responses in result folder
     for relative_path, file_path in file_mapping.items():
 
         with open(file_path, "r", encoding="utf-8") as file:
@@ -121,8 +140,6 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
             logger.warning(f"Skipping {relative_path} as it is empty.")
             continue
 
-        # model = genai.GenerativeModel(model_name="gemini-2.0-flash-exp", generation_config=generation_config)
-
         response = model.generate_content(
             [
                 text_prompt,
@@ -130,9 +147,9 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
             ]
         )
 
-        # Step 4: Save response in results folder, preserving folder structure
+        # Save response in results folder, preserving folder structure
         # Maintain the same structure
-        result_file_path = os.path.join(code_folder, relative_path)
+        result_file_path = os.path.join(project_result_folder, relative_path)
 
         # Create directories if needed
         os.makedirs(os.path.dirname(result_file_path), exist_ok=True)
