@@ -35,12 +35,18 @@ jobs:
 
       - name: Show fetched Markdown
         run: cat issue.md
+
+      # TODO: Add more element to the issue.md like adding header 1
           
-      # - TODO: Parse the issue and generate the json file
+      - name: Parse the markdown issue
+        run: |
+          debugsprai parse issue.md --output issue.json
+
+      - name: Show parsed issue
+        run: |
+          cat issue.json
 
       # TODO: Run the bug spray on the project repository based on the issue number
-
-      # TODO: Generate hash for the brach name
 
       # TODO: Create a new branch and commit the changes
 
