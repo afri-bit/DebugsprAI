@@ -11,9 +11,6 @@ jobs:
     steps:
       - name: "Checkout Project Repository"
         uses: actions/checkout@v4
-        # with:
-        #   repository: "afri-bit/ai-coder"
-        #   token: ${{ secrets.GH_TOKEN }} 
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -28,6 +25,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install .
 
+      - name: Set up GitHub CLI
+        run: |
+          echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
+
+      - name: Fetch Issue Markdown
+        run: |
+          gh issue view 2 --repo ${{ github.repository }} --json body -q .body > issue.md
+
+      - name: Show fetched Markdown
+        run: cat issue.md
+          
       # - TODO: Parse the issue and generate the json file
 
       # TODO: Run the bug spray on the project repository based on the issue number
