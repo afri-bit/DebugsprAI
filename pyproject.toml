@@ -15,6 +15,7 @@ dependencies = [
     "google-generativeai>=0.8.4",
     "pydantic>=2.10.6",
     "click>=8.1.8",
+    "markdown-it-py>=3.0.0",
 ]
 
 requires-python = ">=3.8"

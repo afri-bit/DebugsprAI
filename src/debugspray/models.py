@@ -3,17 +3,15 @@ from pydantic import Field
 
 
 class Issue(BaseModel):
-    id: int
-    title: str
-    description: str
-    severity_level: str = Field(default="")
-    actual_behavior: str = Field(default="")
-    expected_behavior: str = Field(default="")
-    system_information: str = Field(default="")
-    source_folder: str = Field(default="src")
-    test_folder: str = Field(default="test")
-    log: str
-
-
-class Output(BaseModel):
-    result_status: str
+    id: int = Field(default=None)
+    title: str = ""
+    summary: str = ""
+    severity_level: str = ""
+    programming_language: str = ""
+    project_folder: str = ""
+    source_folder: str = ""
+    test_folder: str = ""
+    system_information: str = ""
+    actual_behavior: str = ""
+    expected_behavior: str = ""
+    logs: str = ""
