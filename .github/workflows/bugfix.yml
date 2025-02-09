@@ -22,6 +22,10 @@ jobs:
 
       - name: List Files for Debugging
         run: ls -al
+      
+      - name: Setup the necessary project elements
+        run:|
+          mkdir -p .airesults/project
 
       - name: Install Dependencies
         run: |
@@ -34,31 +38,62 @@ jobs:
 
       - name: Fetch Issue Markdown
         run: |
-          gh issue view 2 --repo ${{ github.repository }} --json body -q .body > issue.md
+          gh issue view 2 --repo ${{ github.repository }} --json body -q .body > .airesults/issue.md
 
       - name: Show fetched Markdown
-        run: cat issue.md
+        run: cat ./.airesults/issue.md
 
-      # TODO: Add more element to the issue.md like adding header 1
-          
       - name: Parse the markdown issue
         run: |
-          debugsprai parse issue.md --output issue.json
+          debugsprai parse ./.airesults/issue.md --output ./.airesults/issue.json
 
       - name: Show parsed issue
         run: |
-          cat issue.json
+          cat ./.airesults/issue.json
 
       - name: Run Bug Spray
         run: |
-          debugsprai debug issue.json
+          debugsprai debug ./.airesults/issue.md
 
           ls -al .airesults
 
-      # TODO: Run the bug spray on the project repository based on the issue number
+      - name: Copy files from ai results to the project directory
+        run: |
+          PROJECT_DIR=$(jq -r '.project_dir' ./.airesults/issue.json)
+          cp -r .airesults/project/* $PROJECT_DIR
 
-      # TODO: Create a new branch and commit the changes
+      - name: Check for Changes
+        id: check_diff
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "Changes detected"
+            echo "HAS_CHANGES=true" >> $GITHUB_ENV
+          else
+            echo "No changes found"
+            echo "HAS_CHANGES=false" >> $GITHUB_ENV
+          fi
 
-      # TODO: Push the changes to the project repository
+      - name: Create and Push a New Branch
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          # Configure Git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # TODO: Create a pull request
+          BRANCH_NAME="auto-update-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b $BRANCH_NAME
+          git add .
+          git commit -m "Auto update: changes detected"
+          git push origin $BRANCH_NAME
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          gh pr create --title "Auto Update: Changes Detected" \
+                       --body "This PR contains automatically detected changes." \
+                       --base main \
+                       --head $BRANCH_NAME \
+                       --repo ${{ github.repository }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
