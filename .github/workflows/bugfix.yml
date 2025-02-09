@@ -53,7 +53,7 @@ jobs:
 
       - name: Run Bug Spray
         run: |
-          debugsprai debug ./.airesults/issue.md
+          debugsprai debug ./.airesults/issue.json
           ls -al .airesults
 
       - name: Copy files from ai results to the project directory
