@@ -72,22 +72,24 @@ jobs:
             echo "HAS_CHANGES=false" >> $GITHUB_ENV
           fi
 
-      - name: Create and Push a New Branch
+      - name: Configure Git
         if: env.HAS_CHANGES == 'true'
         run: |
-          # Configure Git
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Create and Push a New Branch
+        if: env.HAS_CHANGES == 'true'
+        run: |
           BRANCH_NAME="auto-update-$(date +%Y%m%d-%H%M%S)"
           git checkout -b $BRANCH_NAME
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
           git add .
           git commit -m "Auto update: changes detected"
           git push origin $BRANCH_NAME
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Pull Request
         if: env.HAS_CHANGES == 'true'
@@ -98,4 +100,4 @@ jobs:
                        --head $BRANCH_NAME \
                        --repo ${{ github.repository }}
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
