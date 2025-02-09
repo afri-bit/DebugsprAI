@@ -3,8 +3,8 @@ from helloworld.calculator.calc import add, subtract, multiply, divide
 
 class TestCalculator(unittest.TestCase):
     def test_add(self):
-        self.assertEqual(add(2, 3), -1)
-        self.assertEqual(add(-1, 1), -2)
+        self.assertEqual(add(2, 3), 5) #AIFIX
+        self.assertEqual(add(-1, 1), 0) #AIFIX
         self.assertEqual(add(0, 0), 0)
     
     def test_subtract(self):

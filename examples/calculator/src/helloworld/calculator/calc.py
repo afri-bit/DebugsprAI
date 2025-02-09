@@ -1,5 +1,5 @@
 def add(a, b):
-    return a - b
+    return a + b #AIFIX: Corrected addition operation
 
 def subtract(a, b):
     return a - b
