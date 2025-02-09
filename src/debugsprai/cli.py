@@ -1,6 +1,6 @@
 import click
 
-import debugspray.core as core
+import debugsprai.core as core
 
 
 @click.command()

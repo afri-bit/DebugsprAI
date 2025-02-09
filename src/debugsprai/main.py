@@ -1,4 +1,4 @@
-from debugspray import cli
+from debugsprai import cli
 
 
 def run():

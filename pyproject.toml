@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "debugspray-ai"
+name = "debugsprai"
 version = "0.1.0"
 description = "AI automated coder for fixing bug based on tickets created"
 readme = "README.md"
@@ -30,4 +30,4 @@ where = ["src"]
 dev = ["pytest", "black"]
 
 [project.scripts]
-debugspray = "debugspray.main:run"
+debugsprai = "debugsprai.main:run"

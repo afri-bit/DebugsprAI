@@ -5,9 +5,9 @@ from string import Template
 
 import google.generativeai as genai
 
-import debugspray.logger as logger
-import debugspray.prompt as prompt
-from debugspray.models import Issue
+import debugsprai.logger as logger
+import debugsprai.prompt as prompt
+from debugsprai.models import Issue
 
 logger = logger.setup_logger(__name__)
 

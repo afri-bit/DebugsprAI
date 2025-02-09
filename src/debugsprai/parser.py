@@ -1,4 +1,4 @@
-from debugspray.models import Issue
+from debugsprai.models import Issue
 from markdown_it import MarkdownIt
 
 
