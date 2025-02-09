@@ -3,6 +3,9 @@ name: "Auto Bugfix"
 on:
   workflow_dispatch:
 
+env: 
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
 jobs:
   bugfix:
     
@@ -45,6 +48,12 @@ jobs:
       - name: Show parsed issue
         run: |
           cat issue.json
+
+      - name: Run Bug Spray
+        run: |
+          debugsprai debug issue.json
+
+          ls -al .airesults
 
       # TODO: Run the bug spray on the project repository based on the issue number
 
