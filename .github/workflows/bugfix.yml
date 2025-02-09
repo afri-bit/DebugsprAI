@@ -85,6 +85,9 @@ jobs:
           git commit -m "Auto update: changes detected"
           git push origin $BRANCH_NAME
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
 
       - name: Create Pull Request
         if: env.HAS_CHANGES == 'true'
