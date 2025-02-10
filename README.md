@@ -13,34 +13,47 @@ In today's fast-paced development world, AI isn't just assisting—it's solving 
 Imagine this: A developer opens an issue describing a bug. Instead of waiting for manual intervention, **DebugsprAI** jumps in, scans the source code, applies a fix, and submits a pull request—*automatically*.  
 No delays, no bottlenecks, just seamless AI-powered debugging.
 
+> Even better when AI is integrated into the review process in the automated manner.
+
 ## Table of Content <!-- omit header-->
 
 - [Table of Content ](#table-of-content-)
 - [Proof of Concept](#proof-of-concept)
-- [Installation](#installation)
+  - [Technology Stacks](#technology-stacks)
+- [Installation - ⚠️ UNDER CONSTRUCTION](#installation---️-under-construction)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
-- [How to Use](#how-to-use)
+- [How to Use -- ⚠️ UNDER CONSTRUCTION](#how-to-use----️-under-construction)
   - [Enable GitHub Actions Workflow](#enable-github-actions-workflow)
   - [Create a Bug Ticket](#create-a-bug-ticket)
   - [Watch debugsprAI in Action](#watch-debugsprai-in-action)
   - [Review \& Merge](#review--merge)
 - [🎯 Why Choose _DebugsprAI_?](#-why-choose-debugsprai)
 - [🚀 Future Enhancements](#-future-enhancements)
-- [Contributing](#contributing)
-- [License](#license)
-
+- [🤝🏻 Contributing](#-contributing)
+- [💡 Have feedback or ideas? Create an issue or reach out!](#-have-feedback-or-ideas-create-an-issue-or-reach-out)
+- [🪪 License](#-license)
 
 ## Proof of Concept
 
-**DebugsprAI** utilizes **Python** and **GitHub Actions** to automate the debugging workflow. It listens for newly created issues, analyzes the description, finds the relevant code, and intelligently applies fixes. Here's how it works:
+DebugsprAI is a proof of concept project that demonstrates AI-powered bug fixing. It is built with Python and integrates Google's Gemini LLM, leveraging GitHub Actions to automate the debugging workflow.
 
-1. **Issue Creation** - A developer reports a bug on GitHub.
-2. **AI Analysis** - debugsprAI reads the issue, identifies affected code, and determines the best fix.
-3. **Code Modification** - Using AI-driven bug detection, it modifies the source code.
-4. **Pull Request Generation** - The fix is committed, and a pull request is created automatically for review.
+The system listens for newly created GitHub issues, analyzes the reported problem, identifies the affected code, and applies intelligent fixes. Here's how it works:
 
-## Installation
+1. **Issue Detection** – When a developer reports a bug on GitHub, DebugsprAI captures the issue.
+2. **AI-Powered Analysis** – The AI (Gemini) interprets the issue description, locates the relevant code, and suggests potential fixes.
+3. **Automated Code Modification** – Using AI-driven debugging, it adjusts the source code accordingly.
+4. **Pull Request Generation** – The fixed code is committed, and a pull request is automatically created for review.
+This project explores the potential of AI in software debugging, automating tedious processes to enhance development efficiency. 🔥
+
+### Technology Stacks
+
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Google Gemini](https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+
+## Installation - ⚠️ UNDER CONSTRUCTION
 
 To get started with **debugsprAI**, follow these steps:
 
@@ -65,7 +78,7 @@ pip install -r requirements.txt
 export OPENAI_API_KEY=your_api_key_here
 ```
 
-## How to Use
+## How to Use -- ⚠️ UNDER CONSTRUCTION
 
 ### Enable GitHub Actions Workflow
 
@@ -135,17 +148,16 @@ We're continuously improving **DebugsprAI** to:
 - Enhance bug-fixing accuracy with fine-tuned models
 - Introduce custom AI training for project-specific debugging
 
-## Contributing
+## 🤝🏻 Contributing
 
 Join the revolution in AI-driven debugging! Fork the project, contribute, and help shape the future of **DebugsprAI**.
 
 💡 Have feedback or ideas? Create an issue or reach out!
-
 ---
 
-🔗 [GitHub Repository](https://github.com/yourusername/debugsprAI) | 🚀 Happy Debugging! 🐞
+🔗 [GitHub Repository](https://github.com/afri-bit/DebugsprAI) | 🚀 Happy Debugging! 🐞
 
 
-## License
+## 🪪 License
 
 MIT
