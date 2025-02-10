@@ -20,14 +20,12 @@ No delays, no bottlenecks, just seamless AI-powered debugging.
 - [Table of Content ](#table-of-content-)
 - [Proof of Concept](#proof-of-concept)
   - [Technology Stacks](#technology-stacks)
-- [Installation - ⚠️ UNDER CONSTRUCTION](#installation---️-under-construction)
+- [Installation](#installation)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
-- [How to Use -- ⚠️ UNDER CONSTRUCTION](#how-to-use----️-under-construction)
-  - [Enable GitHub Actions Workflow](#enable-github-actions-workflow)
-  - [Create a Bug Ticket](#create-a-bug-ticket)
-  - [Watch debugsprAI in Action](#watch-debugsprai-in-action)
-  - [Review \& Merge](#review--merge)
+- [How to Use](#how-to-use)
+  - [Subcommand `debug`](#subcommand-debug)
+  - [Subcommand `parse`](#subcommand-parse)
 - [🎯 Why Choose _DebugsprAI_?](#-why-choose-debugsprai)
 - [🚀 Future Enhancements](#-future-enhancements)
 - [🤝🏻 Contributing](#-contributing)
@@ -53,85 +51,147 @@ This project explores the potential of AI in software debugging, automating tedi
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
-## Installation - ⚠️ UNDER CONSTRUCTION
+## Installation
 
-To get started with **debugsprAI**, follow these steps:
+**DebugsprAI** is a proof of concept project, therefore there is no python package deployed, that can be downloaded via package manager.
+
+In this section we will guide you through the installation process.
 
 ### Prerequisites
 
-- Python 3.8+
-- GitHub repository with Issues enabled
-- OpenAI API key (or any LLM-compatible service)
-- GitHub Actions enabled
+- Python 3.9+
+- Google Gemini Access (The API Key)
+  > More LLM will be supported in the future.
 
 ### Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/debugsprAI.git
-cd debugsprAI
+git clone https://github.com/afri-bit/DebugsprAI.git
 
-# Install dependencies
-pip install -r requirements.txt
+# Change directory to the project directory
+cd DebugsprAI
 
-# Set up API keys (if required)
-export OPENAI_API_KEY=your_api_key_here
+# Install project
+pip install .
+
+# Setup API Key
+export GEMINI_API_KEY=<your_api_key_here>
 ```
 
-## How to Use -- ⚠️ UNDER CONSTRUCTION
+**Optional**
 
-### Enable GitHub Actions Workflow
-
-Ensure you have a GitHub Actions workflow set up to trigger on new issues. Add the following workflow file under `.github/workflows/debugsprai.yml`:
-
-```yaml
-name: DebugsprAI Bug Fixing
-
-on:
-  issues:
-    types: [opened]
-
-jobs:
-  fix_bug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.8'
-      
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-      
-      - name: Run debugsprAI
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          python run_debugsprAI.py
+```bash
+export GEMINI_MODEL_NAME=gemini-2.0-flash-exp
 ```
 
-### Create a Bug Ticket
+> You can set the model as you required, but the whole setup currently is tested under the `gemini-2.0-flash-exp` model.  
+> Unpredicted behaviour may occur, if you take different model.
 
-Open an issue on GitHub describing a bug in your project. **Example:**
+## How to Use
 
-> "Fix the off-by-one error in `calculate_discount.py` that causes incorrect pricing calculations."
+The **DebugsprAI** application relies on specific user inputs, that is constructed as people normally describe an issue in the github or another repository.  
+This application is targeted to run not only for the automation, but also on your local machine. It takes a JSON file with specific format as the main input.
 
-### Watch debugsprAI in Action
+As the first step, let's make sure that the application is installed properly by executing following command
 
-Once an issue is created, **DebugsprAI** will: 
-✅ Analyze the issue text  
-✅ Locate the relevant source code  
-✅ Apply a fix  
-✅ Generate a pull request with the suggested changes
+```bash
+debugsprai --help
+```
 
-### Review & Merge
+If everything is installed correctly you will see following output on your terminal
 
-Once the PR is created, a developer can review, approve, and merge the fix effortlessly! 🚀
-Or even better, you let the AI review the pull request!!!
+```bash
+Usage: debugsprai [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  debug  _summary_
+  parse  Sub command to parse issue markdown file to json format
+```
+
+### Subcommand `debug`
+
+This subcommand is the core of the application to debug with help of LLM.
+
+It takes a JSON file as input with following format:
+
+```json
+{
+  "id": 1,
+  "title": "Some Bug",
+  "summary": "This bug has something to do with errors",
+  "severity_level": "Low (minor issue, doesn't block usage)",
+  "programming_language": "python",
+  "project_folder": ".",
+  "source_folder": "src",
+  "test_folder": "tests",
+  "system_information": "Linux",
+  "actual_behavior": "Actual behaviour is not working as expected",
+  "expected_behavior": "The function must be working",
+  "logs": "some logs"
+}
+```
+
+Based on the provided in the JSON file, the request will be sent to LLM and your files in the project will be scanned based on the `programming_language` you choose.
+
+> Currently we only support `python` as proof of concept.
+
+After the process is done, you can see the result under the folder `.airesults`. The LLM will only make the necesssary to the files, that may be related to the description in the issue. The changes will be marked with `AIFIX` comments.
+
+In the folder `.airesults` you will find the folder called `project` where the folder structure will be structured exactly as in your project. The last step you have to do is just copy the whole folder into your project, and you will notice the changes.
+
+> LLM will not change anything unless it is necessary.
+
+### Subcommand `parse`
+
+The command is intended as a helper function to parse a specific style of the markdown file and convert it to JSON file, that is required for `debug` command as input.
+
+Following is the example of the markdown file, that is derived from github issue.
+
+```markdown
+### Summary
+
+<Your Summary>
+
+### Severity Level
+
+<Low, Medium, High>
+
+### Programming Language
+
+<python>
+
+### Project Folder
+
+.
+
+### Source Folder
+
+src
+
+### Test Folder
+
+tests
+
+### System Information
+
+Linux
+
+### Actual Behavior
+
+<Describe the current behaviour>
+
+### Expected Behavior
+
+<Describe the expected behaviour>
+
+### Logs
+
+<Put your log information here>
+```
 
 ## 🎯 Why Choose _DebugsprAI_?
 
