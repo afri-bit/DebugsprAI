@@ -2,6 +2,9 @@ import requests
 
 from jsonfetcher.model import PostData
 
+from jsonfetcher.logger import setup_logger
+
+logger = setup_logger(__name__)
 
 class JSONPlaceholderFetcher:
     """
@@ -11,7 +14,7 @@ class JSONPlaceholderFetcher:
     BASE_URL = "https://jsonplaceholder.typicode.com/posts"
 
     @staticmethod
-    def fetch_posts():
+    def fetch_posts(max_batch=10):
         """
         Fetches a list of posts from JSONPlaceholder API.
         """
@@ -20,10 +23,8 @@ class JSONPlaceholderFetcher:
         if response.status_code == 200:
             data = response.json()
             return [
-                PostData(item) for item in data
-            ]  # Incorrect: Not handling empty responses properly
+                PostData(data[i]) for i in range(min(max_batch, len(data)))
+            ]
         else:
-            print(
-                "Failed to fetch data. Status code:", response.code
-            )  # Incorrect attribute (should be status_code)
+            logger.error("Failed to fetch data. Status code:", response.code) 
             return None

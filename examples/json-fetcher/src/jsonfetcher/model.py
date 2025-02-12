@@ -1,3 +1,6 @@
+from jsonfetcher.logger import setup_logger
+
+logger = setup_logger(__name__)
 
 
 class PostData:
@@ -9,11 +12,11 @@ class PostData:
         try:
             self.post_id = data["postId"]
             self.title = data["title"]
-            self.body = (data["content"] if "content" in data else "N/A")
+            self.body = data["content"] if "content" in data else "N/A"
         except KeyError as e:
-            print(f"Error extracting data: {e}")
+            logger.error(f"Error extracting data: {e}")
 
     def display(self):
-        print(f"Post ID: {self.post_id}")
-        print(f"Title: {self.title}")
-        print(f"Body: {self.body}")
+        logger.info(f"Post ID: {self.post_id}")
+        logger.info(f"Title: {self.title}")
+        logger.info(f"Body: {self.body}")
