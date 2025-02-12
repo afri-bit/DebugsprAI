@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jsonfetcher"
+version = "0.1.0"
+description = "Simple application to create a json file from jsonplaceholder API"
+readme = "README.md"
+authors = [
+    { name = "afri-bit", email = "afribit.tech@gmail.com" }
+]
+license = { file = "LICENSE" }
+dependencies = [
+    "requests",
+]
+
+requires-python = ">=3.8"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.optional-dependencies]
+dev = ["pytest", "black"]
+
+[project.scripts]
+debugsprai = "debugsprai.main:run"
