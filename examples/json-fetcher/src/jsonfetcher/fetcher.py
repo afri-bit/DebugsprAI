@@ -6,6 +6,7 @@ from jsonfetcher.logger import setup_logger
 
 logger = setup_logger(__name__)
 
+
 class JSONPlaceholderFetcher:
     """
     A class to fetch posts from JSONPlaceholder API.
@@ -22,9 +23,7 @@ class JSONPlaceholderFetcher:
 
         if response.status_code == 200:
             data = response.json()
-            return [
-                PostData(data[i]) for i in range(min(max_batch, len(data)))
-            ]
+            return [PostData(data[i]) for i in range(min(max_batch, len(data)))]
         else:
-            logger.error("Failed to fetch data. Status code:", response.code) 
+            logger.error("Failed to fetch data. Status code:", response.code)
             return None

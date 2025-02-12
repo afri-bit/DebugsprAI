@@ -12,9 +12,11 @@ class PostData:
         try:
             self.post_id = data["postId"]
             self.title = data["title"]
-            self.body = data["content"] if "content" in data else "N/A"
+            self.body = data["content"]
         except KeyError as e:
             logger.error(f"Error extracting data: {e}")
+        except Exception as e:
+            logger.error(f"Error: {e}")
 
     def display(self):
         logger.info(f"Post ID: {self.post_id}")
