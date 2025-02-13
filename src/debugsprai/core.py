@@ -185,39 +185,5 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
 
         logger.info(f"Processed {code.file_path}, response saved to {result_file_path}")
 
-    import sys
-    sys.exit(0)
-
-    # Upload files to Gemini API and save responses in result folder
-    for relative_path, file_path in file_mapping.items():
-
-        with open(file_path, "r", encoding="utf-8") as file:
-            file_content = file.read()
-
-        if not file_content.strip():
-            logger.warning(f"Skipping {relative_path} as it is empty.")
-            continue
-
-        response = model.generate_content(
-            [
-                text_prompt,
-                file_content,
-            ]
-        )
-
-        # Save response in results folder, preserving folder structure
-        # Maintain the same structure
-        result_file_path = os.path.join(project_result_folder, relative_path)
-
-        # Create directories if needed
-        os.makedirs(os.path.dirname(result_file_path), exist_ok=True)
-
-        with open(result_file_path, "w", encoding="utf-8") as result_file:
-            result_code = response.text
-            if result_code.startswith(f"```{issue.programming_language}") and result_code.endswith("```"):
-                result_code = result_code[len(f"```{issue.programming_language}"):-len("```")]
-            result_file.write(result_code)
-
-        logger.info(f"Processed {relative_path}, response saved to {result_file_path}")
-
+    
     logger.info(f"All files uploaded and responses saved in the '{result_folder}'.")
