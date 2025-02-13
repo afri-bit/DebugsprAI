@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from pydantic import Field
-from typing import Union
+from typing import Union, List
 
 
 class Issue(BaseModel):
@@ -16,3 +16,13 @@ class Issue(BaseModel):
     actual_behavior: str = ""
     expected_behavior: str = ""
     logs: str = ""
+
+
+class Code(BaseModel):
+    file_path: str
+    code: str
+
+
+class Project(BaseModel):
+    source: List[Code]
+    test: List[Code]

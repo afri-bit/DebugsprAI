@@ -1,13 +1,14 @@
 import os
 import json
 import pathlib
+from typing import List
 from string import Template
 
 import google.generativeai as genai
 
 import debugsprai.logger as logger
 import debugsprai.prompt as prompt
-from debugsprai.models import Issue
+from debugsprai.models import Issue, Code, Project
 
 logger = logger.setup_logger(__name__)
 
@@ -52,7 +53,7 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
         raise ValueError(
             f"Programming language '{issue.programming_language}' not supported."
         )
-    
+
     # Get the file extension
     file_extension = programming_languages[issue.programming_language.lower()]
 
@@ -88,6 +89,10 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
     # Create a mapping dictionary
     file_mapping = {}
 
+    project_source_code: List[Code] = []
+    project_test_code: List[Code] = []
+    project_code: Project | None = []
+
     # Scan the source folder for files
     for root, _, files in os.walk(src_folder):
         for file in files:
@@ -96,6 +101,10 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
 
                 # Store relative path
                 relative_path = os.path.relpath(file_path, src_folder.joinpath("..").resolve())
+
+                with open(file_path, "r", encoding="utf-8") as file:
+                    file_content = file.read()
+                    project_source_code.append(Code(file_path=relative_path, code=file_content))
 
                 # Store mapping
                 file_mapping[relative_path] = file_path
@@ -109,9 +118,13 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
                 # Store relative path
                 relative_path = os.path.relpath(file_path, test_folder.joinpath("..").resolve())
 
+                with open(file_path, "r", encoding="utf-8") as file:
+                    file_content = file.read()
+                    project_test_code.append(Code(file_path=relative_path, code=file_content))
+
                 # Store mapping
                 file_mapping[relative_path] = file_path
-    
+
     # Save the mapping to a JSON file
     with open(json_mapping_file, "w") as json_file:
         json.dump(file_mapping, json_file, indent=4)
@@ -119,6 +132,8 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
     logger.info(f"File mapping saved to {json_mapping_file}")
 
     text_prompt_template = Template(prompt.TEMPLATE_PROMPT)
+
+    project_code = Project(source=project_source_code, test=project_test_code)
 
     # Create the text prompt
     text_prompt = text_prompt_template.substitute(
@@ -129,6 +144,49 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
         test_folder=issue.test_folder,
         issue_log_report=issue.logs,
     )
+
+    response = model.generate_content(
+        [
+            text_prompt,
+            project_code.model_dump_json(),
+        ]
+    )
+
+    response_json = response.text
+
+    if response_json.startswith("```json") and response_json.endswith("```"):
+        response_json = response_json[len("```json"):-len("```")]
+
+    response_data = Project.model_validate_json(response_json)
+
+    for code in response_data.source:
+        # Save response in results folder, preserving folder structure
+        # Maintain the same structure
+        result_file_path = project_result_folder.joinpath(code.file_path).resolve()
+
+        # Create directories if needed
+        os.makedirs(os.path.dirname(result_file_path), exist_ok=True)
+
+        with open(result_file_path, "w", encoding="utf-8") as result_file:
+            result_file.write(code.code)
+
+        logger.info(f"Processed {code.file_path}, response saved to {result_file_path}")
+
+    for code in response_data.test:
+        # Save response in results folder, preserving folder structure
+        # Maintain the same structure
+        result_file_path = project_result_folder.joinpath(code.file_path).resolve()
+
+        # Create directories if needed
+        os.makedirs(os.path.dirname(result_file_path), exist_ok=True)
+
+        with open(result_file_path, "w", encoding="utf-8") as result_file:
+            result_file.write(code.code)
+
+        logger.info(f"Processed {code.file_path}, response saved to {result_file_path}")
+
+    import sys
+    sys.exit(0)
 
     # Upload files to Gemini API and save responses in result folder
     for relative_path, file_path in file_mapping.items():
