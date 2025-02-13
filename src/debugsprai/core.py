@@ -155,7 +155,10 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
         os.makedirs(os.path.dirname(result_file_path), exist_ok=True)
 
         with open(result_file_path, "w", encoding="utf-8") as result_file:
-            result_file.write(response.text)
+            result_code = response.text
+            if result_code.startswith(f"```{issue.programming_language}") and result_code.endswith("```"):
+                result_code = result_code[len(f"```{issue.programming_language}"):-len("```")]
+            result_file.write(result_code)
 
         logger.info(f"Processed {relative_path}, response saved to {result_file_path}")
 

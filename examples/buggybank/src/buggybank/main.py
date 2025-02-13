@@ -14,5 +14,5 @@ if __name__ == "__main__":
     account.deposit(50)
     logger.info(f"Balance after deposit: {account.get_balance()}")
 
-    account.withdraw(200)  # ❌ This should fail, but logic allows it!
-    logger.info(f"Balance after withdrawal: {account.get_balance()}")  # ❌ Wrong balance!
+    account.withdraw(200)
+    logger.info(f"Balance after withdrawal: {account.get_balance()}")

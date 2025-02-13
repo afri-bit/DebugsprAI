@@ -18,4 +18,5 @@ Requirements for the Output:
 - Output code must be in the same structure as the input code with the necessary fixes
 - Comment the changes for fixed when necessary with AIFIX identification.
 - Only fixing the code is required based on the issue report, no additional changes are needed, even if they are recommended/wrong.
+- No further action needed, if there is no change in the file itself.
 """
