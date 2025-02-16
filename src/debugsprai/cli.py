@@ -40,13 +40,13 @@ def parse(markdown_file, output):
 @debugsprai.command()
 @click.argument("issue_file", type=click.Path(exists=True))
 @click.option("--result-folder", "-rf", type=click.Path(), default=".airesults", required=False)
-def debug(issue_file, result_folder):
-    """_summary_
+def debug(issue_file: str, result_folder: str):
+    """
+    The core function to your project code based on issue.
 
     Args:
-        project_path (_type_): _description_
-        issue_file (bool): _description_
-        result_folder (_type_): _description_
+        issue_file (str): File path to the issue JSON file
+        result_folder (str): Folder path to store the results
     """
 
     issue: Issue | None = None
