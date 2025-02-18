@@ -40,13 +40,17 @@ def parse(markdown_file, output):
 @debugsprai.command()
 @click.argument("issue_file", type=click.Path(exists=True))
 @click.option("--result-folder", "-rf", type=click.Path(), default=".airesults", required=False)
-def debug(issue_file: str, result_folder: str):
+@click.option("--overwrite", "-ow", is_flag=True, default=False, required=False, help="Overwrite the existing source code files directly.")
+def debug(issue_file: str, result_folder: str, overwrite):
     """
     The core function to your project code based on issue.
 
     Args:
         issue_file (str): File path to the issue JSON file
         result_folder (str): Folder path to store the results
+        overwrite (bool): Overwrite the existing source code files directly. 
+                          With this flag, you can directly overwrite the source code files with the suggested fixes 
+                          without storing the results in the result folder.
     """
 
     issue: Issue | None = None
