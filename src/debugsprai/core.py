@@ -157,7 +157,10 @@ def debug_issue(issue: Issue, result_folder: str = ".airesults"):
     if response_json.startswith("```json") and response_json.endswith("```"):
         response_json = response_json[len("```json"):-len("```")]
 
-    response_data = Project.model_validate_json(response_json)
+    try:
+        response_data = Project.model_validate_json(response_json)
+    except ValueError as e:
+        logger.error(f"Error validating response JSON: {e}")
 
     for code in response_data.source:
         # Save response in results folder, preserving folder structure

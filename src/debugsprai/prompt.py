@@ -16,17 +16,17 @@ If the file is not empty, fix the code based on the following report:
 Return only the corrected code in the exact same JSON format as below:
 ```json
 {
-    source: [
+    "source": [
         {
-            file_path: "relative/path/to/file.py",
-            code: "def some_function():\n    return True"
+            "file_path": "relative/path/to/file.py",
+            "code": "def some_function():\n    return True"
         },
         ...
     ],
-    test: [
+    "test": [
         {
-            file_path: "relative/path/to/file.py",
-            code: "def test_something():\n    assert True"
+            "file_path": "relative/path/to/file.py",
+            "code": "def test_something():\n    assert True"
         },
         ...
     ]
